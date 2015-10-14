@@ -3,6 +3,7 @@ package nasdaq.data;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -10,7 +11,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * CSV-file header:
  * "Symbol","Name","LastSale","MarketCap","ADR TSO","IPOyear","Sector","Industry","Summary Quote"
  */
-
+@JsonPropertyOrder({"Symbol","Name","LastSale","MarketCap","ADR TSO","IPOyear","Sector","Industry","Summary Quote"})
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class Company {
 	
 	private String symbol;
@@ -71,8 +73,7 @@ public final class Company {
 		try {
 			this.lastSale = new BigDecimal(lastSale).setScale(2, RoundingMode.HALF_UP);
 		} catch (NumberFormatException e) {
-			System.out.println("lastSale string: " + lastSale);
-			e.printStackTrace();
+			this.lastSale = new BigDecimal(0.0).setScale(2, RoundingMode.HALF_UP);
 		}
 	}
 
@@ -165,7 +166,7 @@ public final class Company {
 
 	@Override
 	public String toString() {
-		return symbol + " " + name;
+		return "\"" + symbol + " " + name + "\"";
 	}
 	
 	
